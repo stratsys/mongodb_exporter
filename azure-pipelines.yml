@@ -1,0 +1,36 @@
+steps:
+  - script: |
+      . pipeline_scripts/set_pipeline_variables.sh
+    displayName: 'Set pipeline variables'
+  - script: |
+      . pipeline_scripts/build_docker.sh
+    displayName: 'Build Docker image'
+  - task: Docker@2
+    displayName: Login to ACR
+    inputs:
+      command: login
+      containerRegistry: stratsysContainerRegistry
+  - script: |
+      . pipeline_scripts/push_dockerimage.sh
+    displayName: 'Push Docker image'
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  - task: Docker@2
+    displayName: Logout from ACR
+    inputs:
+      command: logout
+      containerRegistry: stratsysContainerRegistry
+  - script: |
+      . pipeline_scripts/remove_dockerimage.sh
+    displayName: 'Remove built image'
+variables:
+  - name: RELEASE_BRANCH
+    value: $(Build.SourceBranchName)
+  - name: COMPLETE_RELEASE_BRANCH
+    value: $(Build.SourceBranch)
+  - name: GIT_COMMIT_SHA
+    value: $(Build.SourceVersion)
+trigger:
+  - master
+pr:
+  - master
+pool: "Linux-docker"

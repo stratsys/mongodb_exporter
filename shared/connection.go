@@ -63,6 +63,7 @@ func MongoClient(opts *MongoSessionOpts) *mongo.Client {
 		SetReadPreference(readpref.Nearest()).
 		SetAppName("mongodb_exporter")
 
+	setTLSOptions(cOpts)
 	client, err := mongo.NewClient(cOpts)
 	if err != nil {
 		return nil

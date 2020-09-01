@@ -15,4 +15,5 @@ require (
 	go.mongodb.org/mongo-driver v1.3.2
 	golang.org/x/crypto v0.0.0-20190618222545-ea8f1a30c443 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
+	software.sslmate.com/src/go-pkcs12 v0.0.0-20200830195227-52f69702a001
 )
